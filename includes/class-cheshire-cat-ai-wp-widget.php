@@ -157,6 +157,9 @@ class Cheshire_Cat_Ai_Wp_Widget {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
+		$this->loader->add_action('admin_menu', $plugin_admin, 'cheshire_cat_add_admin_menu');
+		$this->loader->add_action('admin_init', $plugin_admin, 'cheshire_cat_settings_init');
+
 	}
 
 	/**
@@ -172,6 +175,9 @@ class Cheshire_Cat_Ai_Wp_Widget {
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+
+		// filter to add custom html to the content
+		$this->loader->add_action( 'wp_footer', $plugin_public, 'add_widget_html' );
 
 	}
 

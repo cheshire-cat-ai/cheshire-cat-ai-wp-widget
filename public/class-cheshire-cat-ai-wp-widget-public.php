@@ -84,20 +84,27 @@ class Cheshire_Cat_Ai_Wp_Widget_Public {
 	 */
 	public function enqueue_scripts() {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Cheshire_Cat_Ai_Wp_Widget_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Cheshire_Cat_Ai_Wp_Widget_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
+		wp_enqueue_script(
+			$this->plugin_name . "_widget",
+			plugin_dir_url( __FILE__ ) . 'js/cheshire-cat-widget.js',
+			array(),
+			$this->version,
+			true	// load at bottom page
+		);
+	}
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/cheshire-cat-ai-wp-widget-public.js', array( 'jquery' ), $this->version, false );
+	public function add_widget_html() {
 
+		// Get settings from the options table
+		$options = get_option('cheshire_cat_settings');
+		$url = $options['cheshire_cat_url'];
+		$credential = $options['cheshire_cat_credential'];
+
+		printf(
+			'<div id="cheshire-cat-widget" data-url="%s" data-credential="%s"></div>',
+			esc_url($url),
+			esc_attr($credential)
+		);
 	}
 
 }

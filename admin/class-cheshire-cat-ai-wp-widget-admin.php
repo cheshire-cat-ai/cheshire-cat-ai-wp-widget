@@ -100,4 +100,82 @@ class Cheshire_Cat_Ai_Wp_Widget_Admin {
 
 	}
 
+	public function cheshire_cat_add_admin_menu() {
+		add_options_page(
+			'Cheshire Cat Widget Settings',
+			'Cheshire Cat Widget',
+			'manage_options',
+			'cheshire_cat_widget',
+			array( $this, 'cheshire_cat_options_page')
+		);
+	}
+
+	public function cheshire_cat_settings_init() {
+
+		register_setting('cheshire_cat_widget', 'cheshire_cat_settings');
+		// Set default values if not already set
+		$default_options = array(
+			'cheshire_cat_url' => 'http://localhost:1865',
+			'cheshire_cat_credential' => ""
+		);
+		if (!get_option('cheshire_cat_settings')) {
+			update_option('cheshire_cat_settings', $default_options);
+		}
+	
+		add_settings_section(
+			'cheshire_cat_widget_section',
+			__('Widget Settings', 'cheshire_cat'),
+			array( $this, 'cheshire_cat_settings_section_callback'),
+			'cheshire_cat_widget'
+		);
+	
+		add_settings_field(
+			'cheshire_cat_url',
+			__('Instance URL', 'cheshire_cat'),
+			array( $this, 'cheshire_cat_url_render'),
+			'cheshire_cat_widget',
+			'cheshire_cat_widget_section'
+		);
+	
+		add_settings_field(
+			'cheshire_cat_credential',
+			__('Instance CCAT_API_KEY_WS', 'cheshire_cat'),
+			array( $this, 'cheshire_cat_credential_render'),
+			'cheshire_cat_widget',
+			'cheshire_cat_widget_section'
+		);
+	}
+
+	public function cheshire_cat_url_render() {
+		$options = get_option('cheshire_cat_settings');
+		?>
+		<input type='text' name='cheshire_cat_settings[cheshire_cat_url]' value='<?php echo esc_url($options['cheshire_cat_url']); ?>'>
+		<?php
+	}
+
+	public function cheshire_cat_credential_render() {
+		$options = get_option('cheshire_cat_settings');
+		?>
+		<input type='text' name='cheshire_cat_settings[cheshire_cat_credential]' value='<?php echo esc_attr($options['cheshire_cat_credential']); ?>'>
+		<?php
+	}
+	
+	public function cheshire_cat_settings_section_callback() {
+		echo __('Enter your Cheshire Cat instance details.', 'cheshire_cat');
+	}
+	
+	public function cheshire_cat_options_page() {
+		?>
+		<form action='options.php' method='post'>
+			<h1>Cheshire Cat Widget Settings</h1>
+			<?php
+			settings_fields('cheshire_cat_widget');
+			do_settings_sections('cheshire_cat_widget');
+			submit_button();
+			?>
+		</form>
+		<?php
+	}
 }
+
+
